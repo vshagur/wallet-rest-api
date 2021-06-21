@@ -3,13 +3,17 @@
 ![](https://img.shields.io/static/v1?label=OS&message=linux&color=blue)
 ![](https://img.shields.io/github/license/vshagur/exgrex)
 
-# drf-postgresql-template
+# wallet-rest-api
 
-Template for Django Rest Framework projects (PostgreSQL version).  
+The application provides a rest-api for managing electronic wallets.
+
+(Test task for the development of an electronic wallet management system.)
+
+[Description of the task](). 
 
 ## Documentation
 
-You can find out the description of the project and the user manual from the [wiki](https://github.com/vshagur/drf-postgresql-template/wiki)
+You can find out the description of the project and the user manual from the [wiki]()
 
 
 ## Built With
@@ -28,5 +32,5 @@ You can find out the description of the project and the user manual from the [wi
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE]() file for details
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/vshagur/wallet-rest-api/blob/main/LICENSE) file for details
 
