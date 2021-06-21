@@ -9,11 +9,11 @@ The application provides a rest-api for managing electronic wallets.
 
 (Test task for the development of an electronic wallet management system.)
 
-[Description of the task](). 
+[Description of the task](https://github.com/vshagur/wallet-rest-api/blob/main/docs/task_description.md). 
 
 ## Documentation
 
-You can find out the description of the project and the user manual from the [wiki]()
+You can familiarize yourself with the project description and user manual on the [documentation page](https://github.com/vshagur/wallet-rest-api/blob/main/docs/documentation.md).
 
 
 ## Built With
