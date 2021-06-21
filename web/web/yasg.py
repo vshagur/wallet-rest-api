@@ -7,9 +7,9 @@ from rest_framework import permissions
 # created vshagur@gmail.com, 2021-06-19
 schema_view = get_schema_view(
     openapi.Info(
-        title="<wallet-rest-api>",
+        title="wallet-rest-api",
         default_version='v1',
-        description="<>",
+        description="Rest-api for managing electronic wallets",
         license=openapi.License(name="MIT License"),
     ),
     public=True,
