@@ -9,6 +9,9 @@ omit =
     *admin.py
     *urls.py
     */settings/*
+	*conftest.py
+	*yasg.py
+	*tests.py
 
 [report]
 omit =
@@ -21,6 +24,9 @@ omit =
     *admin.py
     *urls.py
     */settings/*
+    *conftest.py
+    *yasg.py
+	*tests.py
 
 fail_under = 70
 show_missing = True

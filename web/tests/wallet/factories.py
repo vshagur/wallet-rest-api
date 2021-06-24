@@ -7,5 +7,5 @@ class WalletFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Wallet
 
-    name = factory.Sequence(lambda n: "Waller_%03d" % n)
+    name = factory.Sequence(lambda n: "Wallet_%03d" % n)
     balance = fuzzy.FuzzyDecimal(0.01, 100.00, 2)
