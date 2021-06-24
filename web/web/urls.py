@@ -42,7 +42,7 @@ jwt_urlpatterns = [
 urlpatterns += jwt_urlpatterns
 
 # drf-debug-toolbar
-if settings.DEBUG or settings.TESTING_MODE:
+if settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns = [path('__debug__/', include(debug_toolbar.urls)), ] + urlpatterns
