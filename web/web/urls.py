@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
+from transaction.views import TransactionCreate, TransactionRetrieveDestroy
 from wallet.views import WalletListCreate, WalletRetrieveUpdateDestroy
 
 from .yasg import urlpatterns as doc_urls
@@ -28,6 +29,9 @@ urlpatterns = [
     path('api/v1/wallet/', WalletListCreate.as_view(), name='wallet-list'),
     path('api/v1/wallet/<int:pk>/', WalletRetrieveUpdateDestroy.as_view(),
          name='wallet-detail'),
+    path('api/v1/transaction/', TransactionCreate.as_view(), name='transaction-list'),
+    path('api/v1/transaction/<int:pk>/', TransactionRetrieveDestroy.as_view(),
+         name='transaction-detail'),
 ]
 
 # swagger

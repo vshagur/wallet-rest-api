@@ -86,6 +86,7 @@ start: ## Start app into container (daemon mode)
 startapp: ## create django app, expample: $ make startapp app=app_name
 	$ $(RUN_COMMAND) $(WEB) $(DJANGO_MANAGE) startapp $(app)
 	$ $(RUN_COMMAND) $(WEB) mkdir $(TESTS)/$(app)
+	$ $(RUN_COMMAND) $(WEB) touch $(TESTS)/$(app)/__init__.py
 	$ $(RUN_COMMAND) $(WEB) mv $(app)/tests.py -t $(TESTS)/$(app)
 	$ sudo chown -R $(USER):$(USER) $(WEB)
 

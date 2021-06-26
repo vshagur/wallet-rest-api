@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.db import models
 
-MINIMUM_ACCOUNT_BALANCE = '0.01' #
+MINIMUM_ACCOUNT_BALANCE = Decimal('0.01')
 
 
 class Wallet(models.Model):
@@ -15,7 +15,10 @@ class Wallet(models.Model):
 
     balance = models.DecimalField(
         null=False,
-        default=Decimal(MINIMUM_ACCOUNT_BALANCE),
+        default=MINIMUM_ACCOUNT_BALANCE,
         max_digits=12,
         decimal_places=2,
     )
+
+    def __str__(self):
+        return str(self.pk)
