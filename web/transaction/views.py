@@ -11,7 +11,7 @@ from .serializers import TransactionSerializer
 
 class TransactionCreate(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
-    permission_classes = ()
+    permission_classes = (permissions.IsAuthenticated,)
     queryset = Transaction.objects.all()
     filter_backends = (filters.SearchFilter,)
     search_fields = ('wallet__id',)
@@ -19,7 +19,7 @@ class TransactionCreate(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        balance = Decimal(request.data.get('balance'))
+        balance = Decimal(serializer.validated_data.get('balance'))
         wallet_id = request.data.get('wallet')
         wallet = get_object_or_404(Wallet, pk=wallet_id)
         new_balance = wallet.balance + balance
