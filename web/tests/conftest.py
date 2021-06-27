@@ -3,8 +3,10 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
+from tests.transaction.factories import TransactionFactory
 from tests.users.factories import UserFactory
 from tests.wallet.factories import WalletFactory
+from wallet.models import Wallet
 
 
 @pytest.fixture()
@@ -30,6 +32,7 @@ def test_user():
 @pytest.fixture(scope='session')
 def django_db_setup(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
-        WalletFactory.create_batch(10)
         UserFactory()
+        WalletFactory.create_batch(10)
+        TransactionFactory.create_batch(10, wallet=Wallet.objects.last())
         yield
