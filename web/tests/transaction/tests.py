@@ -53,9 +53,11 @@ class TestCreateTransaction:
         }
 
     def test_anon_client_can_not_create_transaction(self, anon_client):
+        balance = self.wallet.balance
         resp = anon_client.post(self.url, data=self.data)
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
         assert Transaction.objects.all().count() == self.count
+        assert Wallet.objects.get(pk=self.wallet.id).balance == balance
 
     @pytest.mark.django_db
     def test_auth_client_can_create_transaction(self, auth_client):
@@ -79,7 +81,7 @@ class TestCreateTransaction:
     @pytest.mark.django_db
     def test_auth_client_can_create_transaction_decrease_balance(self, auth_client):
         data = self.data.copy()
-        balance_value = Decimal(data['balance']) - Decimal('2.02')
+        balance_value = Wallet.objects.get(pk=self.wallet.id).balance - Decimal('0.02')
         data['balance'] = f'-{balance_value}'
         resp = auth_client.post(self.url, data=data)
         assert resp.status_code == status.HTTP_201_CREATED
@@ -89,6 +91,7 @@ class TestCreateTransaction:
         pk = resp_data.get('id')
         assert Transaction.objects.filter(id=pk).exists()
         assert resp_data.get('comment') == data.get('comment')
+        assert resp_data.get('wallet') == self.wallet.id
         assert resp_data.get('wallet') == self.wallet.id
         assert Decimal(str(resp_data.get('balance'))) == Decimal(data.get('balance'))
         transaction = Transaction.objects.get(id=pk)
