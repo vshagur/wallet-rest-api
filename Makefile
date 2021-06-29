@@ -26,12 +26,14 @@ RUN_TEST_COMMAND = $(SHELL) $(TESTS)/run_tests.sh
 
 bash: ## Start bash into container
 	$ $(RUN_COMMAND) $(WEB) /bin/bash
+	$ docker-compose stop $(DB)
 
 build: ## Build containers
 	$ docker-compose build $(WEB)
 
 check_upgrade: ## сheck packages version from requirements.txt
 	$ $(RUN_COMMAND) $(WEB) python -m pip list --outdated
+	$ docker-compose stop $(DB)
 
 chown: ## recursively change file permissions from root to current user
 	$ sudo chown -R $(USER):$(USER) .
@@ -68,8 +70,10 @@ makemigrations: ## Run makemigrations into container
 migrate: ## Run migrate into container
 	$ $(RUN_COMMAND) $(WEB) $(DJANGO_MANAGE) migrate
 
-psql: ## Run psql into container (the web container must be running before executing this command)
+psql: ## Run psql into container
+	$ docker-compose up -d $(DB)
 	$ docker-compose exec -u postgres $(DB) psql
+	$ docker-compose stop $(DB)
 
 rebuild: stop chown build ## Rebuild app container
 	echo -e "Rebuilding the container image ... \033[32mdone\033[m"
@@ -79,6 +83,7 @@ run: ## Start web container
 
 shell: ## Start Django shell into container
 	$ $(RUN_COMMAND) $(WEB) $(DJANGO_MANAGE) shell
+	$ docker-compose stop $(DB)
 
 start: ## Start app into container (daemon mode)
 	$ docker-compose up -d
@@ -86,6 +91,7 @@ start: ## Start app into container (daemon mode)
 startapp: ## create django app, expample: $ make startapp app=app_name
 	$ $(RUN_COMMAND) $(WEB) $(DJANGO_MANAGE) startapp $(app)
 	$ $(RUN_COMMAND) $(WEB) mkdir $(TESTS)/$(app)
+	$ $(RUN_COMMAND) $(WEB) touch $(TESTS)/$(app)/__init__.py
 	$ $(RUN_COMMAND) $(WEB) mv $(app)/tests.py -t $(TESTS)/$(app)
 	$ sudo chown -R $(USER):$(USER) $(WEB)
 
@@ -94,3 +100,4 @@ stop: ## Stop app into container (daemon mode)
 
 test: ## Run test into container
 	$ $(RUN_COMMAND) $(WEB) $(RUN_TEST_COMMAND)
+	$ docker-compose stop $(DB)
