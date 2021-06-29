@@ -7,6 +7,8 @@ from rest_framework.reverse import reverse
 from transaction.models import Transaction
 from wallet.models import Wallet
 
+from .factories import TransactionFactory
+
 
 def test_anon_client_can_not_get_transactions_list(anon_client):
     resp = anon_client.get(reverse('transaction-list'))
@@ -31,9 +33,10 @@ def test_auth_client_can_get_transaction_detail(auth_client):
 
 
 def test_auth_client_can_get_transactions_list(auth_client):
+    count = Transaction.objects.all().count()
     resp = auth_client.get(reverse('transaction-list'))
     assert resp.status_code == status.HTTP_200_OK
-    assert len(resp.json()) == 10
+    assert len(resp.json()) == count
 
 
 @pytest.mark.django_db
@@ -80,26 +83,33 @@ class TestCreateTransaction:
 
     @pytest.mark.django_db
     def test_auth_client_can_create_transaction_decrease_balance(self, auth_client):
+        transaction = TransactionFactory(balance=Decimal('100.0'))
+        count = Transaction.objects.all().count()
+        balance = Decimal('-50.02')
         data = self.data.copy()
-        balance_value = Wallet.objects.get(pk=self.wallet.id).balance - Decimal('0.02')
-        data['balance'] = f'-{balance_value}'
+        data['wallet'] = transaction.wallet.id
+        data['comment'] = 'comment: -50.02'
+        data['balance'] = f'{balance}'
+        expected_balance = transaction.wallet.balance + balance
         resp = auth_client.post(self.url, data=data)
+        # check response
         assert resp.status_code == status.HTTP_201_CREATED
-        assert Transaction.objects.all().count() == self.count + 1
+        assert Transaction.objects.all().count() == count + 1
         resp_data = resp.json()
         assert 'id' in resp_data
         pk = resp_data.get('id')
         assert Transaction.objects.filter(id=pk).exists()
         assert resp_data.get('comment') == data.get('comment')
-        assert resp_data.get('wallet') == self.wallet.id
-        assert resp_data.get('wallet') == self.wallet.id
-        assert Decimal(str(resp_data.get('balance'))) == Decimal(data.get('balance'))
+        assert resp_data.get('wallet') == transaction.wallet.id
+        assert Decimal(str(resp_data.get('balance'))) == balance
+        # check db
         transaction = Transaction.objects.get(id=pk)
         assert transaction.comment == data.get('comment')
-        assert transaction.wallet == self.wallet
-        assert transaction.balance == Decimal(data.get('balance'))
-        updated_wallet = Wallet.objects.get(pk=self.wallet.id)
-        assert updated_wallet.balance == self.balance - balance_value
+        assert transaction.wallet == transaction.wallet
+        assert transaction.balance == balance
+        # check wallet balance
+        updated_wallet = Wallet.objects.get(pk=transaction.wallet.id)
+        assert updated_wallet.balance == expected_balance
 
     @pytest.mark.django_db
     def test_auth_client_can_not_create_transaction_if_balance_not_enough(
@@ -110,3 +120,15 @@ class TestCreateTransaction:
         resp = auth_client.post(self.url, data=data)
         assert resp.status_code == status.HTTP_400_BAD_REQUEST
         assert Transaction.objects.all().count() == self.count
+
+
+@pytest.mark.django_db
+def test_auth_client_can_delete_transaction(auth_client):
+    wallet = Wallet.objects.all().last()
+    transaction = TransactionFactory(balance=Decimal('100.0'), wallet=wallet)
+    transactions = Transaction.objects.all()
+    count = transactions.count()
+    resp = auth_client.delete(reverse('transaction-detail', args=(transaction.id,)))
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    assert Transaction.objects.all().count() == count - 1
+    assert not Transaction.objects.filter(pk=transaction.id).exists()

@@ -1,11 +1,11 @@
 import factory
-from factory import fuzzy
-from wallet.models import Wallet
+from wallet.models import MINIMUM_ACCOUNT_BALANCE, Wallet
 
 
 class WalletFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Wallet
+        django_get_or_create = ('name',)
 
     name = factory.Sequence(lambda n: "Wallet_%03d" % n)
-    balance = fuzzy.FuzzyDecimal(0.01, 100.00, 2)
+    balance = MINIMUM_ACCOUNT_BALANCE

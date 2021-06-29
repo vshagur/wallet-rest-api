@@ -68,9 +68,10 @@ def test_auth_client_can_create_wallet(auth_client):
 
 
 def test_auth_client_can_get_wallets_list(auth_client):
+    count = Wallet.objects.all().count()
     resp = auth_client.get(reverse('wallet-list'))
     assert resp.status_code == status.HTTP_200_OK
-    assert len(resp.json()) == 10
+    assert len(resp.json()) == count
 
 
 @pytest.mark.django_db

@@ -33,6 +33,7 @@ build: ## Build containers
 
 check_upgrade: ## сheck packages version from requirements.txt
 	$ $(RUN_COMMAND) $(WEB) python -m pip list --outdated
+	$ docker-compose stop $(DB)
 
 chown: ## recursively change file permissions from root to current user
 	$ sudo chown -R $(USER):$(USER) .

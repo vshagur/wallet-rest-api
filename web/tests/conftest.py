@@ -35,4 +35,5 @@ def django_db_setup(django_db_setup, django_db_blocker):
         UserFactory()
         WalletFactory.create_batch(10)
         TransactionFactory.create_batch(10, wallet=Wallet.objects.last())
+        TransactionFactory.create_batch(100)
         yield
