@@ -1,5 +1,6 @@
 ## Install
 
+
 #### Install Docker
 
 You need to install Docker. Follow the instructions: [Install Docker](https://docs.docker.com/engine/installation/)
@@ -24,9 +25,14 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 $ git clone https://github.com/vshagur/wallet-rest-api.git
 $ cd wallet-rest-api/
 ```
+#### Configuration. 
+
+Configuration. Replace the default settings with your own. If you are deploying a project for development, 
+then leave the settings as they are
+
 #### Build and initialize the project
 
-Using Makefile: 
+###### Using Makefile: 
 ```
 $ make init
 ```
@@ -35,9 +41,49 @@ Make sure the build was successful and run your tests.
 ```
 $ make test
 ```
+----------
+
+###### Alternative way (using docker):
+
+Build a container:
+
+```
+$ docker-compose build web
+```
+
+Check that the container with the database is not running:
+```
+$ docker-compose ps
+```
+
+If the container with the database is running, stop it:
+```
+$ docker-compose stop db
+```
+
+Apply migrations:
+```
+$ docker-compose run --rm web python manage.py migrate
+```
+
+Create superuser. Answer a few questions. For answers, use the data from the .env file:
+```
+$ docker-compose run --rm web python manage.py createsuperuser
+```
+
+Make sure the build was successful and run your tests.
+```
+$ docker-compose run --rm web pytest tests/
+```
+--------
 
 #### Start up.
 
 ```
 $ make run
+```
+or
+
+```
+$ docker-compose up
 ```
