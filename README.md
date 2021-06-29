@@ -23,8 +23,8 @@ You can familiarize yourself with the project description and user manual on the
 * [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
 * [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/) - Generate real Swagger/OpenAPI 2.0 specifications from a Django Rest Framework API.
 * [django-filter](https://django-filter.readthedocs.io/en/stable/) - Django-filter is a generic, reusable application to alleviate writing some of the more mundane bits of view code.
+* [django-rest-framework-simplejwt](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/) - Simple JWT provides a JSON Web Token authentication backend for the Django REST Framework. 
 * [Docker](https://www.docker.com/) - Docker is a set of platform as a service (PaaS) products that use OS-level virtualization to deliver software in packages called containers.
-
  
 ## Authors
 
